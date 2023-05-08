@@ -1,0 +1,187 @@
+
+#Welcome screen
+blue="\033[4m"
+bold="\033[1m"
+reset="\033[0m"
+
+WELMSG="${bold}${blue}Welcome to Brian's Patient Management${reset}"
+echo -e "$WELMSG" 
+
+
+
+
+
+
+
+
+
+#Main menu
+while true; do
+
+echo ""
+echo "PLease Select an option:"
+echo "[L/l] List patients"
+echo "[A/a] Add a new patient"
+echo "[S/s] Search patient"
+echo "[D/d] Delete patient"
+echo "[E/e] Exit"
+
+read -p "Your choice: " choice
+
+case $choice in
+  l|L)
+    #List patients
+    clear
+    echo -e "First Name\tLast Name\tPhone number\tPatient ID"
+    echo "////////////////////////////////////////////////////////" 
+    sort -t ',' -k 3,3  -k 1,1 patients.csv | awk -F ',' '{print toupper($2)"\t"toupper($3)"\t"$4"\t"$1}'
+;;
+
+  a|A)
+   #Add a new patient
+   clear
+   read -p "Enter first name:" first_name
+   read -p "Enter last name:" last_name
+   read -p "Enter phone number:" phone_number
+# patient ID
+prefix=$(echo $last_name | cut -c 1-4 | tr '[:lower:]' '[:upper:]')
+suffix=$(echo $first_name | cut -c 1 | tr '[:lower:]' '[:upper:]')
+patient_id="$prefix$suffix"
+
+# check for dups
+i=2
+while grep -q "^$patient_id," patients.csv; do
+patient_id="$prefix$suffix$i"
+i=$((i+1))
+done
+ 
+#patient added to the file 
+echo "$patient_id,$first_name,$last_name,$phone_number" >> patients.csv
+
+# success msg
+echo "The new Patient ID is $patient_id"
+echo "The new patient is added to the records."
+;;
+
+s|S)
+
+# Search for a Patient
+clear 
+read -p "Enter the last name to search: " search_string
+echo -e "First Name\tLast Name\tPhone Number\tPatient ID"
+echo "---------------------------------------------------"
+grep -i "$search_string" patients.csv | sort -t ',' -k 2,2 -k 1,1 | awk -F ',' '{print toupper($2)"\t"toupper($3)"\t"$4"\t"$1}'
+;;
+
+d|D)
+#delete patient
+clear
+read -p "Enter the last name to delete: " delete_string
+sed -i "/^.*,$delete_string,/d" patients.csv
+echo "The matching records have been deleted from patients.csv"
+;;
+
+e|E)
+# exit 
+clear
+echo "Thanks for using Brian's records!" 
+exit 0
+;;  
+
+*)
+#invalid input
+clear
+echo "INvalid option! PLease choose a valid option."
+;;
+esac
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+ 
